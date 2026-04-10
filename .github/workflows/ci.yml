@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  shell-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y shellcheck zsh
+
+      - name: ShellCheck
+        run: shellcheck install.sh sync-external.sh sync-mcp.sh
+
+      - name: Bash syntax check
+        run: bash -n install.sh && bash -n sync-external.sh && bash -n sync-mcp.sh
+
+      - name: Zsh syntax check
+        run: zsh -n auto-update.sh
+
+      - name: Validate mcp.json
+        run: python3 -c "import json; json.load(open('setting/mcp.json'))"
+
+      - name: Validate external-skills.yml
+        run: python3 -c "
+          import re, sys
+          content = open('external-skills.yml').read()
+          if 'skills:' not in content:
+              print('Missing skills key', file=sys.stderr)
+              sys.exit(1)
+          "

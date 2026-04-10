@@ -1,0 +1,14 @@
+# External skills from other repositories
+# Each entry will be cloned/pulled and symlinked into setting/skills/
+#
+# Format:
+#   - name: skill-name          # Name used in setting/skills/ (must be unique)
+#     repo: https://github.com/owner/repo.git
+#     path: path/to/skill       # Path inside the repo to the skill directory (optional, defaults to repo root)
+#
+# Example:
+#   - name: my-skill
+#     repo: https://github.com/someone/opencode-skills.git
+#     path: skills/my-skill
+
+skills: []
