@@ -6,16 +6,16 @@ Dotfiles for AI coding agents. Sync your config across devices with Git.
 
 Zero dependencies beyond `git`, `bash`, and `python3`.
 
-Supports **[OpenCode](https://opencode.ai)** and **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)**.
+Supports **[OpenCode](https://opencode.ai)**, **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)**, and **[Codex CLI](https://github.com/openai/codex)**.
 
 ## What Gets Synced
 
-| Item | OpenCode | Claude Code |
-|------|----------|-------------|
-| Agent instructions | `~/.config/opencode/AGENTS.md` | `~/.claude/CLAUDE.md` |
-| Custom skills | `~/.config/opencode/skills/` | `~/.claude/skills/` |
-| MCP servers | Merged into `opencode.json` | `~/.claude/.mcp.json` |
-| External skills | Cloned and symlinked into `skills/` | Same |
+| Item | OpenCode | Claude Code | Codex CLI |
+|------|----------|-------------|-----------|
+| Agent instructions | `~/.config/opencode/AGENTS.md` | `~/.claude/CLAUDE.md` | `~/.codex/AGENTS.md` |
+| Custom skills | `~/.config/opencode/skills/` | `~/.claude/skills/` | — |
+| MCP servers | Merged into `opencode.json` | `~/.claude/.mcp.json` | Merged into `config.toml` |
+| External skills | Cloned and symlinked into `skills/` | Same | — |
 
 ## Quick Start
 
@@ -42,12 +42,14 @@ vim external-skills.yml      # External skills
 ```
 setting/AGENTS.md  ──symlink──>  ~/.config/opencode/AGENTS.md
                    ──symlink──>  ~/.claude/CLAUDE.md
+                   ──symlink──>  ~/.codex/AGENTS.md
 
 setting/skills/    ──symlink──>  ~/.config/opencode/skills/
                    ──symlink──>  ~/.claude/skills/
 
 setting/mcp.json   ──symlink──>  ~/.claude/.mcp.json
                    ──convert──>  ~/.config/opencode/opencode.json (mcp key)
+                   ──convert──>  ~/.codex/config.toml (mcp_servers sections)
 ```
 
 A shell hook in `~/.zshrc` runs on every terminal open. It checks for remote updates in the background, pulls if needed, and re-runs the install.
@@ -75,6 +77,7 @@ Edit `setting/mcp.json` using [Claude Code's format](https://docs.anthropic.com/
   - Adds `"type": "local"` for stdio servers
   - Converts env var syntax (`${VAR}` to `{env:VAR}`)
   - Merges into existing `opencode.json` without overwriting other settings
+- **Codex CLI**: `sync-mcp.sh` converts JSON to TOML `[mcp_servers.*]` sections and merges into `config.toml` without overwriting other settings
 
 ## External Skills
 
@@ -112,7 +115,7 @@ export DOTAI_UPDATE_INTERVAL_SECONDS=900
 ├── install.sh              # Main installer (symlinks + calls sync scripts)
 ├── auto-update.sh          # Zsh hook for background auto-update
 ├── sync-external.sh        # Clone/pull external skill repos
-├── sync-mcp.sh             # Convert and merge MCP config to OpenCode
+├── sync-mcp.sh             # Convert and merge MCP config to OpenCode and Codex
 ├── external-skills.yml     # External skill declarations
 └── setting/
     ├── AGENTS.md            # Agent instructions (your rules)

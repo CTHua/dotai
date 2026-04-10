@@ -69,12 +69,20 @@ else
   echo "⚠️  $CLAUDE_DIR not found, skipping symlinks"
 fi
 
+CODEX_DIR="$HOME/.codex"
+if [ -d "$CODEX_DIR" ]; then
+  echo "✅ Found $CODEX_DIR, creating symlinks:"
+  ensure_link "$DOTFILES_DIR/setting/AGENTS.md" "$CODEX_DIR/AGENTS.md"
+else
+  echo "⚠️  $CODEX_DIR not found, skipping symlinks"
+fi
+
 ensure_auto_update_hook
 
 # Sync external skills from other repositories
 bash "$DOTFILES_DIR/sync-external.sh"
 
-# Sync MCP server config to OpenCode
+# Sync MCP server config to OpenCode and Codex
 bash "$DOTFILES_DIR/sync-mcp.sh"
 
 echo ""

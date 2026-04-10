@@ -6,16 +6,16 @@ AI 編碼代理的 dotfiles。用 Git 跨裝置同步你的設定。
 
 除了 `git`、`bash`、`python3` 之外零依賴。
 
-支援 **[OpenCode](https://opencode.ai)** 和 **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)**。
+支援 **[OpenCode](https://opencode.ai)**、**[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** 和 **[Codex CLI](https://github.com/openai/codex)**。
 
 ## 同步項目
 
-| 項目 | OpenCode | Claude Code |
-|------|----------|-------------|
-| Agent 指令 | `~/.config/opencode/AGENTS.md` | `~/.claude/CLAUDE.md` |
-| 自訂技能 | `~/.config/opencode/skills/` | `~/.claude/skills/` |
-| MCP servers | Merge 到 `opencode.json` | `~/.claude/.mcp.json` |
-| 外部技能 | Clone 並 symlink 到 `skills/` | 同上 |
+| 項目 | OpenCode | Claude Code | Codex CLI |
+|------|----------|-------------|-----------|
+| Agent 指令 | `~/.config/opencode/AGENTS.md` | `~/.claude/CLAUDE.md` | `~/.codex/AGENTS.md` |
+| 自訂技能 | `~/.config/opencode/skills/` | `~/.claude/skills/` | — |
+| MCP servers | Merge 到 `opencode.json` | `~/.claude/.mcp.json` | Merge 到 `config.toml` |
+| 外部技能 | Clone 並 symlink 到 `skills/` | 同上 | — |
 
 ## 快速開始
 
@@ -42,12 +42,14 @@ vim external-skills.yml      # 外部技能
 ```
 setting/AGENTS.md  ──symlink──>  ~/.config/opencode/AGENTS.md
                    ──symlink──>  ~/.claude/CLAUDE.md
+                   ──symlink──>  ~/.codex/AGENTS.md
 
 setting/skills/    ──symlink──>  ~/.config/opencode/skills/
                    ──symlink──>  ~/.claude/skills/
 
 setting/mcp.json   ──symlink──>  ~/.claude/.mcp.json
                    ──convert──>  ~/.config/opencode/opencode.json (mcp key)
+                   ──convert──>  ~/.codex/config.toml (mcp_servers sections)
 ```
 
 `~/.zshrc` 中的 shell hook 會在每次開啟 terminal 時執行，背景檢查遠端更新，有更新就自動 pull 並重新安裝。
@@ -75,6 +77,7 @@ setting/mcp.json   ──symlink──>  ~/.claude/.mcp.json
   - 為 stdio server 加入 `"type": "local"`
   - 環境變數語法轉換（`${VAR}` 轉為 `{env:VAR}`）
   - Merge 到既有的 `opencode.json`，不會覆蓋其他設定
+- **Codex CLI**：`sync-mcp.sh` 將 JSON 轉為 TOML `[mcp_servers.*]` sections，merge 到 `config.toml`，不會覆蓋其他設定
 
 ## 外部技能
 
@@ -112,7 +115,7 @@ export DOTAI_UPDATE_INTERVAL_SECONDS=900
 ├── install.sh              # 主安裝腳本（symlink + 呼叫 sync 腳本）
 ├── auto-update.sh          # Zsh hook，背景自動更新
 ├── sync-external.sh        # Clone/pull 外部技能 repo
-├── sync-mcp.sh             # 轉換 MCP 設定格式並 merge 到 OpenCode
+├── sync-mcp.sh             # 轉換 MCP 設定格式並 merge 到 OpenCode 和 Codex
 ├── external-skills.yml     # 外部技能宣告
 └── setting/
     ├── AGENTS.md            # Agent 指令（你的規則）
