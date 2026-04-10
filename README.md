@@ -1,5 +1,7 @@
 # dotai
 
+[繁體中文](README-ZH.md)
+
 Dotfiles for AI coding agents. Sync your config across devices with Git.
 
 Zero dependencies beyond `git`, `bash`, and `python3`.
