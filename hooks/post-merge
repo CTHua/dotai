@@ -1,0 +1,7 @@
+#!/bin/bash
+set -euo pipefail
+
+DOTFILES_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+
+bash "$DOTFILES_DIR/sync-external.sh"
+bash "$DOTFILES_DIR/sync-mcp.sh"

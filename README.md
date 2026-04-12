@@ -97,25 +97,28 @@ The install script clones repos into `references/` and symlinks the skill direct
 The shell hook (`auto-update.sh`) is sourced by `~/.zshrc` on every terminal open:
 
 - Runs in the background (non-blocking)
-- Cooldown period (default 1800s) to avoid excessive checks
+- Cooldown period (default 600s) to avoid excessive checks
 - Skips when local uncommitted changes are detected
 - Lock mechanism prevents concurrent updates
-- External skill repos are synced even when the main repo has no updates
+- External skills and MCP config are synced even when the main repo has no updates
+- `post-merge` git hook: auto-syncs after manual `git pull`
 
 Adjust the cooldown:
 
 ```bash
-export DOTAI_UPDATE_INTERVAL_SECONDS=900
+export DOTAI_UPDATE_INTERVAL_SECONDS=300
 ```
 
 ## Project Structure
 
 ```
 .
-├── install.sh              # Main installer (symlinks + calls sync scripts)
+├── install.sh              # Main installer (symlinks + hooks + calls sync scripts)
 ├── auto-update.sh          # Zsh hook for background auto-update
 ├── sync-external.sh        # Clone/pull external skill repos
 ├── sync-mcp.sh             # Convert and merge MCP config to OpenCode and Codex
+├── hooks/                  # Git hooks (installed by install.sh)
+│   └── post-merge          # Auto-sync after git pull
 ├── external-skills.yml     # External skill declarations
 └── setting/
     ├── AGENTS.md            # Agent instructions (your rules)

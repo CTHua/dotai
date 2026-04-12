@@ -79,6 +79,19 @@ fi
 
 ensure_auto_update_hook
 
+# Install git hooks (post-merge: auto-sync after pull)
+HOOKS_SRC="$DOTFILES_DIR/hooks"
+HOOKS_DST="$DOTFILES_DIR/.git/hooks"
+if [ -d "$HOOKS_SRC" ] && [ -d "$DOTFILES_DIR/.git" ]; then
+  for hook in "$HOOKS_SRC"/*; do
+    [ -f "$hook" ] || continue
+    hook_name="$(basename "$hook")"
+    cp "$hook" "$HOOKS_DST/$hook_name"
+    chmod +x "$HOOKS_DST/$hook_name"
+  done
+  echo "✅ Git hooks installed"
+fi
+
 # Sync external skills from other repositories
 bash "$DOTFILES_DIR/sync-external.sh"
 

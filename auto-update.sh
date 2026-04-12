@@ -1,5 +1,5 @@
 _dotai_dir="${${(%):-%N}:A:h}"
-_dotai_interval="${DOTAI_UPDATE_INTERVAL_SECONDS:-1800}"
+_dotai_interval="${DOTAI_UPDATE_INTERVAL_SECONDS:-600}"
 _dotai_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/dotai"
 _dotai_last_check_file="$_dotai_cache_dir/last-check"
 _dotai_lock_dir="$_dotai_cache_dir/update.lock"
@@ -39,6 +39,7 @@ _dotai_lock_dir="$_dotai_cache_dir/update.lock"
     fi
   else
     bash "$_dir/sync-external.sh" 2>/dev/null | grep -v '^ '
+    bash "$_dir/sync-mcp.sh" 2>/dev/null | grep -v '^ '
   fi
 ) &!
 

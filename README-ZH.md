@@ -97,25 +97,28 @@ skills:
 Shell hook（`auto-update.sh`）在每次開啟 terminal 時由 `~/.zshrc` 載入：
 
 - 背景執行，不阻塞 terminal
-- 冷卻機制（預設 1800 秒）避免頻繁檢查
+- 冷卻機制（預設 600 秒）避免頻繁檢查
 - 偵測到本地未提交變更時跳過
 - Lock 機制防止多個 terminal 同時觸發
-- 即使主 repo 沒更新，外部技能 repo 也會同步
+- 即使主 repo 沒更新，也會同步外部技能與 MCP 設定
+- `post-merge` git hook：手動 `git pull` 有更新時也會自動 sync
 
 調整冷卻時間：
 
 ```bash
-export DOTAI_UPDATE_INTERVAL_SECONDS=900
+export DOTAI_UPDATE_INTERVAL_SECONDS=300
 ```
 
 ## 專案結構
 
 ```
 .
-├── install.sh              # 主安裝腳本（symlink + 呼叫 sync 腳本）
+├── install.sh              # 主安裝腳本（symlink + hooks + 呼叫 sync 腳本）
 ├── auto-update.sh          # Zsh hook，背景自動更新
 ├── sync-external.sh        # Clone/pull 外部技能 repo
 ├── sync-mcp.sh             # 轉換 MCP 設定格式並 merge 到 OpenCode 和 Codex
+├── hooks/                  # Git hooks（由 install.sh 安裝）
+│   └── post-merge          # Pull 後自動 sync
 ├── external-skills.yml     # 外部技能宣告
 └── setting/
     ├── AGENTS.md            # Agent 指令（你的規則）
